@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontak | Web Profil &amp; Portofolio</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --secondary: #0d9488;
+      --secondary-soft: #f0fdfa;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.07), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container { width: min(1120px, 92%); margin: 0 auto; }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      gap: 16px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .nav-menu { display: flex; align-items: center; gap: 8px; list-style: none; }
+
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-size: 0.94rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-link:hover { background: var(--surface-soft); color: var(--text); }
+    .nav-link.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+
+    .nav-admin-btn {
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-admin-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+    .nav-admin-btn.is-logged-in { border-color: #99f6e4; background: var(--secondary-soft); color: var(--secondary); }
+    .status-dot-online { width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; }
+
+    .nav-toggle {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    /* Header */
+    .page-header {
+      padding: 48px 0 36px;
+      background: radial-gradient(circle at top right, #eff6ff 0%, #f8fafc 60%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .page-title {
+      font-size: clamp(1.75rem, 3vw, 2.3rem);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .page-desc {
+      color: var(--text-muted);
+      max-width: 680px;
+    }
+
+    /* Layout */
+    .section { padding: 48px 0 64px; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card h2 { font-size: 1.28rem; margin-bottom: 8px; }
+    .card-sub { color: var(--text-muted); font-size: 0.94rem; margin-bottom: 20px; }
+
+    .contact-channels {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .contact-channel-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg);
+      transition: transform 0.15s, border-color 0.2s, background 0.2s;
+    }
+
+    .contact-channel-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .channel-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .channel-icon-instagram {
+      background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6);
+      color: #fff;
+    }
+
+    .channel-icon-github {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .channel-icon-globe {
+      background: var(--secondary-soft);
+      color: var(--secondary);
+    }
+
+    .channel-body { flex: 1; min-width: 0; }
+    .channel-label { display: block; font-size: 0.8rem; color: var(--text-muted); }
+    .channel-value { display: block; font-size: 0.98rem; color: var(--text); word-break: break-word; }
+    .channel-arrow { font-weight: 700; color: var(--primary); }
+
+    /* Mini profile + illustration */
+    .contact-visual-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      border: 1px solid #dbeafe;
+    }
+
+    .contact-visual-card img {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+
+    .illustration-preview {
+      margin-top: 20px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    textarea.form-control { min-height: 120px; resize: vertical; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .privacy-note {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--secondary-soft);
+      border: 1px solid #ccfbf1;
+      color: #0f766e;
+      font-size: 0.85rem;
+    }
+
+    .form-alert {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .form-alert-success {
+      display: block;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .form-alert-error {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--primary); }
+    .footer-ig { display: inline-flex; align-items: center; gap: 6px; color: #db2777; font-weight: 600; }
+
+    @media (max-width: 850px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 16px 4%;
+        align-items: stretch;
+      }
+      .nav-menu.open { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">WP</span>
+        <span data-bind="nama" data-preserve-html="true">Raka Pratama</span>
+      </a>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Buka menu navigasi" aria-expanded="false">
+        Menu &#9776;
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="index.html" class="nav-link">Beranda</a></li>
+        <li><a href="profil.html" class="nav-link">Profil</a></li>
+        <li><a href="kontak.html" class="nav-link active">Kontak</a></li>
+        <li><a href="admin.html" id="nav-admin-link" class="nav-admin-btn">Login Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <span class="eyebrow">Kanal Komunikasi</span>
+        <h1 class="page-title">Hubungi &amp; Jejaring Komunitas</h1>
+        <p class="page-desc" data-bind="contactSambutan" data-preserve-html="true">
+          Silakan terhubung atau kirimkan pesan melalui kanal digital di bawah ini. Demi menjaga privasi, halaman ini hanya menampilkan tautan kanal daring tanpa mencantumkan nomor telepon, alamat fisik, maupun surel pribadi.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-grid">
+        <!-- Daftar Kanal Kontak Digital -->
+        <div class="card">
+          <h2>Kontak yang Dapat Dihubungi</h2>
+          <p class="card-sub">Pilih kanal jejaring komunitas Instagram atau platform digital di bawah ini.</p>
+
+          <div id="contact-links-container" class="contact-channels">
+            <a class="contact-channel-card" href="https://instagram.com/rakapratama.dev" target="_blank" rel="noopener noreferrer">
+              <div class="channel-icon channel-icon-instagram">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </div>
+              <div class="channel-body">
+                <span class="channel-label">Instagram Komunitas</span>
+                <strong class="channel-value">@rakapratama.dev</strong>
+              </div>
+              <span class="channel-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+
+            <a class="contact-channel-card" href="https://github.com/rakapratama" target="_blank" rel="noopener noreferrer">
+              <div class="channel-icon channel-icon-github">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                  <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                </svg>
+              </div>
+              <div class="channel-body">
+                <span class="channel-label">GitHub Portofolio</span>
+                <strong class="channel-value">github.com/rakapratama</strong>
+              </div>
+              <span class="channel-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+
+            <a class="contact-channel-card" href="https://vercel.com" target="_blank" rel="noopener noreferrer">
+              <div class="channel-icon channel-icon-globe">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </div>
+              <div class="channel-body">
+                <span class="channel-label">Portal Karya Web</span>
+                <strong class="channel-value">rakapratama.vercel.app</strong>
+              </div>
+              <span class="channel-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+
+          <div class="contact-visual-card">
+            <img src="assets/foto-profil.jpg" alt="Foto Profil Raka Pratama" data-bind-img="foto" data-preserve-html="true" />
+            <div>
+              <strong data-bind="nama" data-preserve-html="true">Raka Pratama</strong>
+              <p style="font-size: 0.86rem; color: var(--text-muted);" data-bind="ketersediaan" data-preserve-html="true">
+                Terbuka untuk Diskusi &amp; Kolaborasi Proyek
+              </p>
+            </div>
+          </div>
+
+          <div class="illustration-preview">
+            <img src="assets/ilustrasi-utama.jpg" alt="Ilustrasi Kolaborasi Web" data-bind-img="ilustrasi" data-preserve-html="true" />
+          </div>
+        </div>
+
+        <!-- Formulir Pesan Cepat (Tanpa Email/HP/Alamat) -->
+        <div class="card">
+          <h2>Kirim Pesan Singkat</h2>
+          <p class="card-sub">Tinggalkan catatan atau sapaan secara langsung tanpa perlu mengisi email atau nomor telepon.</p>
+
+          <form id="contact-message-form">
+            <div class="form-group">
+              <label for="msg-nama">Nama Pengirim</label>
+              <input type="text" id="msg-nama" class="form-control" placeholder="Contoh: Andi Wijaya" required />
+            </div>
+
+            <div class="form-group">
+              <label for="msg-subjek">Topik / Keperluan</label>
+              <input type="text" id="msg-subjek" class="form-control" placeholder="Contoh: Diskusi Proyek Web" />
+            </div>
+
+            <div class="form-group">
+              <label for="msg-pesan">Isi Pesan</label>
+              <textarea id="msg-pesan" class="form-control" placeholder="Tuliskan pesan atau ide kolaborasi Anda di sini..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+          </form>
+
+          <div id="contact-form-feedback" class="form-alert" role="status"></div>
+
+          <div class="privacy-note">
+            <strong>Catatan Privasi:</strong> Aplikasi ini tidak mengumpulkan maupun menampilkan nomor telepon, alamat rumah, atau email pribadi. Pesan yang dikirim melalui formulir ini tersimpan secara lokal di browser dan dapat dibaca melalui menu Admin.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 <strong data-bind="nama" data-preserve-html="true">Raka Pratama</strong> &mdash; Web Profil HTML &amp; JavaScript.</p>
+      <div class="footer-links">
+        <a href="index.html">Beranda</a>
+        <a href="profil.html">Profil</a>
+        <a href="kontak.html">Kontak</a>
+        <a href="https://instagram.com/rakapratama.dev" target="_blank" rel="noopener noreferrer" class="footer-ig" data-bind-instagram data-preserve-html="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          Instagram
+        </a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

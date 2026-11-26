@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | Web Profil &amp; Portofolio</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --secondary: #0d9488;
+      --secondary-soft: #f0fdfa;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --warning: #d97706;
+      --warning-soft: #fffbeb;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(1120px, 92%); margin: 0 auto; }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      gap: 16px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .nav-menu { display: flex; align-items: center; gap: 8px; list-style: none; }
+
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-size: 0.94rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .nav-link:hover { background: var(--surface-soft); color: var(--text); }
+
+    .nav-admin-btn {
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-admin-btn.is-logged-in { border-color: #99f6e4; background: var(--secondary-soft); color: var(--secondary); }
+    .status-dot-online { width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; }
+
+    .nav-toggle {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    /* Main */
+    main { flex: 1; padding: 40px 0 64px; }
+
+    /* Login Card */
+    .login-wrapper {
+      max-width: 440px;
+      margin: 24px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .login-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .login-wrapper h1 { font-size: 1.5rem; margin-bottom: 6px; }
+    .login-sub { color: var(--text-muted); font-size: 0.93rem; margin-bottom: 22px; }
+
+    .helper-box {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* Forms & Buttons */
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.94rem;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    textarea.form-control { min-height: 110px; resize: vertical; }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-family: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: var(--secondary); color: #fff; }
+    .btn-secondary:hover { filter: brightness(0.95); }
+    .btn-outline { background: var(--surface); border-color: var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-danger { background: var(--danger-soft); border-color: #fecaca; color: var(--danger); }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn-sm { padding: 7px 12px; font-size: 0.84rem; }
+
+    /* Admin Dashboard */
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      background: var(--surface);
+      padding: 22px 26px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .admin-header h1 { font-size: 1.45rem; }
+    .admin-header p { color: var(--text-muted); font-size: 0.92rem; }
+
+    .admin-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .tab-btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+
+    .panel-card h2 { font-size: 1.2rem; margin-bottom: 6px; }
+    .panel-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Photo upload preview */
+    .photo-editor {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 18px;
+    }
+
+    .photo-preview {
+      width: 96px;
+      height: 96px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid var(--primary-soft);
+    }
+
+    /* Repeater Items */
+    .repeater-list { display: grid; gap: 12px; margin-bottom: 14px; }
+
+    .repeater-item {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      display: grid;
+      gap: 10px;
+    }
+
+    .repeater-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .repeater-title { font-size: 0.85rem; font-weight: 700; color: var(--primary); }
+
+    /* Alerts */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .alert-show { display: block; }
+    .alert-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+    .alert-error { background: var(--danger-soft); border: 1px solid #fecaca; color: #991b1b; }
+    .alert-warning { background: var(--warning-soft); border: 1px solid #fde68a; color: #92400e; }
+    .alert-info { background: var(--primary-soft); border: 1px solid #bfdbfe; color: #1e40af; }
+
+    .code-preview {
+      width: 100%;
+      min-height: 220px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.82rem;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: #e2e8f0;
+      margin: 12px 0;
+    }
+
+    .message-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      margin-bottom: 12px;
+    }
+
+    .message-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 720px) {
+      .form-row-2 { grid-template-columns: 1fr; }
+      .nav-toggle { display: inline-flex; }
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 16px 4%;
+        align-items: stretch;
+      }
+      .nav-menu.open { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">WP</span>
+        <span data-bind="nama" data-preserve-html="true">Raka Pratama</span>
+      </a>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Buka menu navigasi" aria-expanded="false">
+        Menu &#9776;
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="index.html" class="nav-link">Beranda</a></li>
+        <li><a href="profil.html" class="nav-link">Profil</a></li>
+        <li><a href="kontak.html" class="nav-link">Kontak</a></li>
+        <li><a href="admin.html" id="nav-admin-link" class="nav-admin-btn">Login Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Tampilan Login Admin -->
+    <section id="admin-login-section" class="login-wrapper">
+      <div class="login-badge" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h1>Login Admin</h1>
+      <p class="login-sub">Masuk untuk mengelola nama, profil, kontak digital, kata sandi, serta ekspor konfigurasi permanen.</p>
+
+      <div id="login-alert" class="alert alert-error" role="alert"></div>
+
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" class="form-control" value="admin" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="Masukkan password admin" required autocomplete="current-password" />
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px;">
+          <input type="checkbox" id="toggle-login-pw" />
+          <label for="toggle-login-pw" style="font-size: 0.86rem; color: var(--text-muted); cursor: pointer;">Tampilkan password</label>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Masuk ke Panel Admin</button>
+      </form>
+
+      <div class="helper-box">
+        <strong>Akses Awal:</strong> Username <code>admin</code> dan password default <code>admin123</code>. Setelah masuk, Anda dapat mengganti password pada tab <em>Keamanan</em>.
+      </div>
+    </section>
+
+    <!-- Tampilan Dashboard Admin -->
+    <section id="admin-dashboard-section" class="hidden">
+      <div class="admin-header">
+        <div>
+          <h1>Panel Pengelola Admin</h1>
+          <p>Ubah nama, profil, kontak digital, password admin, dan simpan permanen untuk publikasi Vercel.</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="profil.html" class="btn btn-outline btn-sm">Lihat Halaman Profil</a>
+          <button type="button" id="btn-logout" class="btn btn-danger btn-sm">Keluar (Logout)</button>
+        </div>
+      </div>
+
+      <div id="global-admin-alert" class="alert" role="status"></div>
+
+      <div class="admin-tabs" role="tablist">
+        <button type="button" class="tab-btn active" data-tab="tab-profil">1. Nama &amp; Profil</button>
+        <button type="button" class="tab-btn" data-tab="tab-kontak">2. Kontak &amp; Instagram</button>
+        <button type="button" class="tab-btn" data-tab="tab-keamanan">3. Ganti Password</button>
+        <button type="button" class="tab-btn" data-tab="tab-publish">4. Simpan Permanen (Publish)</button>
+        <button type="button" class="tab-btn" data-tab="tab-pesan">5. Pesan Masuk</button>
+      </div>
+
+      <!-- Tab 1: Nama & Profil -->
+      <div id="tab-profil" class="tab-pane active">
+        <form id="form-edit-profil">
+          <div class="panel-card">
+            <h2>Identitas &amp; Foto Profil</h2>
+            <p class="panel-sub">Perubahan pada bagian ini langsung tampil pada Halaman Utama, Profil, dan Kontak di browser Anda.</p>
+
+            <div class="photo-editor">
+              <img id="admin-photo-preview" src="assets/foto-profil.jpg" alt="Pratinjau Foto Profil" class="photo-preview" />
+              <div style="flex: 1; min-width: 220px;">
+                <label for="input-foto-file" style="display:block; font-weight:600; font-size:0.88rem; margin-bottom:6px;">Unggah Foto Profil Baru (JPG/PNG)</label>
+                <input type="file" id="input-foto-file" accept="image/*" class="form-control" style="padding: 8px;" />
+                <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" id="btn-reset-photo" class="btn btn-outline btn-sm">Gunakan Foto Default</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="edit-nama">Nama Lengkap / Tampilan</label>
+                <input type="text" id="edit-nama" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label for="edit-peran">Peran / Profesi / Jurusan</label>
+                <input type="text" id="edit-peran" class="form-control" required />
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="edit-tagline">Tagline Singkat</label>
+                <input type="text" id="edit-tagline" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="edit-ketersediaan">Status Ketersediaan</label>
+                <input type="text" id="edit-ketersediaan" class="form-control" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-sambutan-hero">Teks Sambutan Halaman Utama</label>
+              <textarea id="edit-sambutan-hero" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-bio">Deskripsi Profil Lengkap (pisahkan paragraf dengan Enter 2x)</label>
+              <textarea id="edit-bio" class="form-control" style="min-height: 140px;"></textarea>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+              <div>
+                <h2>Daftar Keahlian</h2>
+                <p class="panel-sub" style="margin-bottom:0;">Ditampilkan pada halaman Profil.</p>
+              </div>
+              <button type="button" id="btn-add-skill" class="btn btn-outline btn-sm">+ Tambah Keahlian</button>
+            </div>
+            <div id="admin-skills-list" class="repeater-list"></div>
+          </div>
+
+          <div class="panel-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+              <div>
+                <h2>Sorotan Karya / Fokus Utama</h2>
+                <p class="panel-sub" style="margin-bottom:0;">Ditampilkan pada Halaman Utama.</p>
+              </div>
+              <button type="button" id="btn-add-highlight" class="btn btn-outline btn-sm">+ Tambah Sorotan</button>
+            </div>
+            <div id="admin-highlights-list" class="repeater-list"></div>
+          </div>
+
+          <div class="panel-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+              <div>
+                <h2>Riwayat Pembelajaran / Pengalaman</h2>
+                <p class="panel-sub" style="margin-bottom:0;">Ditampilkan sebagai lini masa pada halaman Profil.</p>
+              </div>
+              <button type="button" id="btn-add-history" class="btn btn-outline btn-sm">+ Tambah Riwayat</button>
+            </div>
+            <div id="admin-history-list" class="repeater-list"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Simpan Perubahan Nama &amp; Profil</button>
+        </form>
+      </div>
+
+      <!-- Tab 2: Kontak & Instagram -->
+      <div id="tab-kontak" class="tab-pane">
+        <form id="form-edit-kontak">
+          <div class="panel-card">
+            <h2>Pengaturan Kontak &amp; Jejaring Komunitas Instagram</h2>
+            <p class="panel-sub">Sesuai ketentuan privasi, hindari mencantumkan nomor HP, alamat rumah, maupun alamat email.</p>
+
+            <div id="privacy-warning-box" class="alert alert-warning"></div>
+
+            <div class="form-group">
+              <label for="edit-contact-sambutan">Sambutan Halaman Kontak</label>
+              <textarea id="edit-contact-sambutan" class="form-control"></textarea>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="edit-ig-handle">Username / Handle Instagram</label>
+                <input type="text" id="edit-ig-handle" class="form-control" placeholder="@username" required />
+              </div>
+              <div class="form-group">
+                <label for="edit-ig-url">URL Profil Instagram</label>
+                <input type="url" id="edit-ig-url" class="form-control" placeholder="https://instagram.com/username" required />
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="edit-komunitas-judul">Judul Seksi Jejaring Komunitas</label>
+                <input type="text" id="edit-komunitas-judul" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="edit-komunitas-desc">Deskripsi Seksi Jejaring Komunitas</label>
+                <input type="text" id="edit-komunitas-desc" class="form-control" />
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+              <div>
+                <h2>Daftar Kanal Kontak yang Dapat Dihubungi</h2>
+                <p class="panel-sub" style="margin-bottom:0;">Gunakan tautan platform daring seperti Instagram, GitHub, atau portofolio web.</p>
+              </div>
+              <button type="button" id="btn-add-contact-link" class="btn btn-outline btn-sm">+ Tambah Kanal Kontak</button>
+            </div>
+            <div id="admin-contact-links-list" class="repeater-list"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Simpan Perubahan Kontak</button>
+        </form>
+      </div>
+
+      <!-- Tab 3: Ganti Password -->
+      <div id="tab-keamanan" class="tab-pane">
+        <div class="panel-card" style="max-width: 560px;">
+          <h2>Ganti Password Admin</h2>
+          <p class="panel-sub">Password disimpan dalam bentuk hash SHA-256. Setelah mengganti password, pastikan mengunduh ulang <code>config.js</code> jika ingin menerapkannya ke situs yang dipublikasikan.</p>
+
+          <div id="password-alert" class="alert"></div>
+
+          <form id="form-change-password">
+            <div class="form-group">
+              <label for="pw-old">Password Lama</label>
+              <input type="password" id="pw-old" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="pw-new">Password Baru (minimal 6 karakter)</label>
+              <input type="password" id="pw-new" class="form-control" minlength="6" required />
+            </div>
+            <div class="form-group">
+              <label for="pw-confirm">Konfirmasi Password Baru</label>
+              <input type="password" id="pw-confirm" class="form-control" minlength="6" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Perbarui Password Admin</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab 4: Simpan Permanen & Publish -->
+      <div id="tab-publish" class="tab-pane">
+        <div class="panel-card">
+          <h2>Simpan Profil Permanen untuk Publish (Vercel)</h2>
+          <p class="panel-sub">
+            Perubahan yang Anda simpan di Panel Admin tersimpan di <code>localStorage</code> browser lokal ini. Agar profil yang sudah diedit <strong>tetap permanen dan tidak berubah kembali ke default</strong> saat di-upload ke Vercel atau dibuka dari perangkat lain, lakukan salah satu langkah berikut:
+          </p>
+
+          <div class="alert alert-info alert-show">
+            <strong>Cara 1 (Jika edit melalui Panel Admin ini):</strong> Klik tombol <strong>Unduh File <code>config.js</code> Terbaru</strong> di bawah, lalu timpa file <code>js/config.js</code> di folder proyek Anda sebelum melakukan upload/deploy ke Vercel.
+            <br /><br />
+            <strong>Cara 2 (Jika edit teks langsung di file HTML):</strong> Perubahan yang Anda tulis langsung di <code>index.html</code>, <code>profil.html</code>, atau <code>kontak.html</code> otomatis dipertahankan saat dipublikasikan selama belum ditimpa oleh ekspor Admin.
+          </div>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;">
+            <button type="button" id="btn-download-config" class="btn btn-secondary">Unduh File config.js Terbaru</button>
+            <button type="button" id="btn-copy-config" class="btn btn-outline">Salin Kode config.js</button>
+            <button type="button" id="btn-reset-local" class="btn btn-danger">Reset Perubahan Lokal ke File Publish</button>
+          </div>
+
+          <label for="config-export-preview" style="display:block; font-weight:600; font-size:0.88rem;">Pratinjau Isi File <code>js/config.js</code> Siap Publish:</label>
+          <textarea id="config-export-preview" class="code-preview" readonly></textarea>
+        </div>
+      </div>
+
+      <!-- Tab 5: Pesan Masuk -->
+      <div id="tab-pesan" class="tab-pane">
+        <div class="panel-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+            <div>
+              <h2>Pesan Masuk dari Halaman Kontak</h2>
+              <p class="panel-sub" style="margin-bottom:0;">Daftar pesan lokal yang dikirim melalui formulir pada halaman Kontak.</p>
+            </div>
+            <button type="button" id="btn-clear-messages" class="btn btn-danger btn-sm">Hapus Semua Pesan</button>
+          </div>
+          <div id="admin-messages-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 <strong data-bind="nama" data-preserve-html="true">Raka Pratama</strong> &mdash; Panel Admin Lokal &amp; Vercel.</p>
+      <a href="index.html" style="color: var(--primary); font-weight: 600;">&larr; Kembali ke Beranda</a>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var App = window.WebProfilApp;
+      var currentState = App.getState();
+
+      var loginSection = document.getElementById("admin-login-section");
+      var dashboardSection = document.getElementById("admin-dashboard-section");
+      var loginForm = document.getElementById("admin-login-form");
+      var loginAlert = document.getElementById("login-alert");
+      var globalAlert = document.getElementById("global-admin-alert");
+
+      function showGlobalAlert(type, msg) {
+        globalAlert.className = "alert alert-show alert-" + type;
+        globalAlert.textContent = msg;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function toggleView() {
+        var loggedIn = App.isAdminLoggedIn();
+        if (loggedIn) {
+          loginSection.classList.add("hidden");
+          dashboardSection.classList.remove("hidden");
+          currentState = App.getState();
+          populateAllForms();
+        } else {
+          loginSection.classList.remove("hidden");
+          dashboardSection.classList.add("hidden");
+        }
+        App.updateAdminNavBadge();
+      }
+
+      // Show/hide login password
+      document.getElementById("toggle-login-pw").addEventListener("change", function () {
+        document.getElementById("login-password").type = this.checked ? "text" : "password";
+      });
+
+      // Login Handler
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var user = document.getElementById("login-username").value.trim();
+        var pass = document.getElementById("login-password").value;
+        var state = App.getState();
+        var adminCfg = state.admin || {};
+        var inputHash = App.sha256(pass);
+
+        if (user === (adminCfg.username || "admin") && inputHash === adminCfg.passwordHash) {
+          App.setAdminSession(true);
+          loginAlert.classList.remove("alert-show");
+          loginForm.reset();
+          document.getElementById("login-username").value = adminCfg.username || "admin";
+          toggleView();
+        } else {
+          loginAlert.textContent = "Username atau password tidak sesuai. Silakan periksa kembali.";
+          loginAlert.classList.add("alert-show");
+        }
+      });
+
+      // Logout Handler
+      document.getElementById("btn-logout").addEventListener("click", function () {
+        App.setAdminSession(false);
+        toggleView();
+      });
+
+      // Tab Switching
+      document.querySelectorAll(".tab-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+          document.querySelectorAll(".tab-pane").forEach(function (p) { p.classList.remove("active"); });
+          btn.classList.add("active");
+          var targetId = btn.getAttribute("data-tab");
+          document.getElementById(targetId).classList.add("active");
+          if (targetId === "tab-publish") {
+            refreshConfigPreview();
+          } else if (targetId === "tab-pesan") {
+            renderMessages();
+          }
+        });
+      });
+
+      // Populate forms
+      function populateAllForms() {
+        var p = currentState.profile || {};
+        var c = currentState.contact || {};
+
+        document.getElementById("admin-photo-preview").src = p.foto || "assets/foto-profil.jpg";
+        document.getElementById("edit-nama").value = p.nama || "";
+        document.getElementById("edit-peran").value = p.peran || "";
+        document.getElementById("edit-tagline").value = p.tagline || "";
+        document.getElementById("edit-ketersediaan").value = p.ketersediaan || "";
+        document.getElementById("edit-sambutan-hero").value = p.sambutanHero || "";
+        document.getElementById("edit-bio").value = p.bio || "";
+
+        renderSkillsEditor(p.keahlian || []);
+        renderHighlightsEditor(p.sorotan || []);
+        renderHistoryEditor(p.riwayat || []);
+
+        document.getElementById("edit-contact-sambutan").value = c.sambutan || "";
+        document.getElementById("edit-ig-handle").value = c.instagramHandle || "";
+        document.getElementById("edit-ig-url").value = c.instagramUrl || "";
+        document.getElementById("edit-komunitas-judul").value = c.komunitasJudul || "";
+        document.getElementById("edit-komunitas-desc").value = c.komunitasDeskripsi || "";
+
+        renderContactLinksEditor(c.links || []);
+        refreshConfigPreview();
+        renderMessages();
+      }
+
+      // Photo Upload & Reset
+      document.getElementById("input-foto-file").addEventListener("change", function (e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        App.compressImageToDataUrl(file, 420, function (dataUrl) {
+          currentState.profile.foto = dataUrl;
+          document.getElementById("admin-photo-preview").src = dataUrl;
+          showGlobalAlert("info", "Foto baru siap. Klik 'Simpan Perubahan Nama & Profil' untuk menerapkannya.");
+        });
+      });
+
+      document.getElementById("btn-reset-photo").addEventListener("click", function () {
+        currentState.profile.foto = "assets/foto-profil.jpg";
+        document.getElementById("admin-photo-preview").src = "assets/foto-profil.jpg";
+        document.getElementById("input-foto-file").value = "";
+      });
+
+      // Skills Editor
+      function renderSkillsEditor(list) {
+        var container = document.getElementById("admin-skills-list");
+        container.innerHTML = "";
+        list.forEach(function (item, idx) {
+          var div = document.createElement("div");
+          div.className = "repeater-item";
+          div.innerHTML =
+            '<div class="repeater-head">' +
+            '<span class="repeater-title">Keahlian #' + (idx + 1) + "</span>" +
+            '<button type="button" class="btn btn-danger btn-sm btn-del-skill">Hapus</button>' +
+            "</div>" +
+            '<div class="form-row-2">' +
+            '<input type="text" class="form-control skill-nama" placeholder="Nama keahlian" value="' + App.escapeHtml(item.nama) + '" />' +
+            '<input type="text" class="form-control skill-kat" placeholder="Kategori (mis: Frontend)" value="' + App.escapeHtml(item.kategori) + '" />' +
+            "</div>" +
+            '<input type="text" class="form-control skill-lvl" placeholder="Tingkat (mis: Mahir)" value="' + App.escapeHtml(item.tingkat) + '" />';
+          div.querySelector(".btn-del-skill").addEventListener("click", function () {
+            div.remove();
+          });
+          container.appendChild(div);
+        });
+      }
+
+      document.getElementById("btn-add-skill").addEventListener("click", function () {
+        var existing = collectSkillsFromDom();
+        existing.push({ nama: "", kategori: "Umum", tingkat: "Menengah" });
+        renderSkillsEditor(existing);
+      });
+
+      function collectSkillsFromDom() {
+        var rows = document.querySelectorAll("#admin-skills-list .repeater-item");
+        var res = [];
+        rows.forEach(function (r) {
+          var nama = r.querySelector(".skill-nama").value.trim();
+          var kategori = r.querySelector(".skill-kat").value.trim();
+          var tingkat = r.querySelector(".skill-lvl").value.trim();
+          if (nama || kategori) {
+            res.push({ nama: nama || "Keahlian Baru", kategori: kategori || "Umum", tingkat: tingkat || "Aktif" });
+          }
+        });
+        return res;
+      }
+
+      // Highlights Editor
+      function renderHighlightsEditor(list) {
+        var container = document.getElementById("admin-highlights-list");
+        container.innerHTML = "";
+        list.forEach(function (item, idx) {
+          var div = document.createElement("div");
+          div.className = "repeater-item";
+          div.innerHTML =
+            '<div class="repeater-head">' +
+            '<span class="repeater-title">Sorotan #' + (idx + 1) + "</span>" +
+            '<button type="button" class="btn btn-danger btn-sm btn-del-hl">Hapus</button>' +
+            "</div>" +
+            '<div class="form-row-2">' +
+            '<input type="text" class="form-control hl-judul" placeholder="Judul sorotan" value="' + App.escapeHtml(item.judul) + '" />' +
+            '<input type="text" class="form-control hl-tag" placeholder="Label tag" value="' + App.escapeHtml(item.tag) + '" />' +
+            "</div>" +
+            '<textarea class="form-control hl-desc" style="min-height:70px;" placeholder="Deskripsi singkat">' + App.escapeHtml(item.deskripsi) + "</textarea>";
+          div.querySelector(".btn-del-hl").addEventListener("click", function () {
+            div.remove();
+          });
+          container.appendChild(div);
+        });
+      }
+
+      document.getElementById("btn-add-highlight").addEventListener("click", function () {
+        var existing = collectHighlightsFromDom();
+        existing.push({ judul: "", tag: "Karya", deskripsi: "" });
+        renderHighlightsEditor(existing);
+      });
+
+      function collectHighlightsFromDom() {
+        var rows = document.querySelectorAll("#admin-highlights-list .repeater-item");
+        var res = [];
+        rows.forEach(function (r) {
+          var judul = r.querySelector(".hl-judul").value.trim();
+          var tag = r.querySelector(".hl-tag").value.trim();
+          var deskripsi = r.querySelector(".hl-desc").value.trim();
+          if (judul || deskripsi) {
+            res.push({ judul: judul || "Karya Baru", tag: tag || "Proyek", deskripsi: deskripsi });
+          }
+        });
+        return res;
+      }
+
+      // History Editor
+      function renderHistoryEditor(list) {
+        var container = document.getElementById("admin-history-list");
+        container.innerHTML = "";
+        list.forEach(function (item, idx) {
+          var div = document.createElement("div");
+          div.className = "repeater-item";
+          div.innerHTML =
+            '<div class="repeater-head">' +
+            '<span class="repeater-title">Riwayat #' + (idx + 1) + "</span>" +
+            '<button type="button" class="btn btn-danger btn-sm btn-del-hist">Hapus</button>' +
+            "</div>" +
+            '<div class="form-row-2">' +
+            '<input type="text" class="form-control hist-periode" placeholder="Periode (mis: 2024 - Sekarang)" value="' + App.escapeHtml(item.periode) + '" />' +
+            '<input type="text" class="form-control hist-judul" placeholder="Judul / Bidang" value="' + App.escapeHtml(item.judul) + '" />' +
+            "</div>" +
+            '<input type="text" class="form-control hist-instansi" placeholder="Instansi / Kegiatan" value="' + App.escapeHtml(item.instansi) + '" />' +
+            '<textarea class="form-control hist-desc" style="min-height:70px;" placeholder="Deskripsi">' + App.escapeHtml(item.deskripsi) + "</textarea>";
+          div.querySelector(".btn-del-hist").addEventListener("click", function () {
+            div.remove();
+          });
+          container.appendChild(div);
+        });
+      }
+
+      document.getElementById("btn-add-history").addEventListener("click", function () {
+        var existing = collectHistoryFromDom();
+        existing.push({ periode: "", judul: "", instansi: "", deskripsi: "" });
+        renderHistoryEditor(existing);
+      });
+
+      function collectHistoryFromDom() {
+        var rows = document.querySelectorAll("#admin-history-list .repeater-item");
+        var res = [];
+        rows.forEach(function (r) {
+          var periode = r.querySelector(".hist-periode").value.trim();
+          var judul = r.querySelector(".hist-judul").value.trim();
+          var instansi = r.querySelector(".hist-instansi").value.trim();
+          var deskripsi = r.querySelector(".hist-desc").value.trim();
+          if (judul || periode) {
+            res.push({ periode: periode, judul: judul, instansi: instansi, deskripsi: deskripsi });
+          }
+        });
+        return res;
+      }
+
+      // Save Tab 1 (Profile)
+      document.getElementById("form-edit-profil").addEventListener("submit", function (e) {
+        e.preventDefault();
+        currentState.profile.nama = document.getElementById("edit-nama").value.trim();
+        currentState.profile.peran = document.getElementById("edit-peran").value.trim();
+        currentState.profile.tagline = document.getElementById("edit-tagline").value.trim();
+        currentState.profile.ketersediaan = document.getElementById("edit-ketersediaan").value.trim();
+        currentState.profile.sambutanHero = document.getElementById("edit-sambutan-hero").value.trim();
+        currentState.profile.bio = document.getElementById("edit-bio").value.trim();
+        currentState.profile.keahlian = collectSkillsFromDom();
+        currentState.profile.sorotan = collectHighlightsFromDom();
+        currentState.profile.riwayat = collectHistoryFromDom();
+
+        currentState = App.saveState(currentState);
+        App.applyProfileToDom();
+        refreshConfigPreview();
+        showGlobalAlert("success", "Nama dan profil berhasil disimpan di browser! Jangan lupa unduh config.js pada Tab 4 jika akan dipublikasikan ke Vercel.");
+      });
+
+      // Contact Links Editor
+      function renderContactLinksEditor(list) {
+        var container = document.getElementById("admin-contact-links-list");
+        container.innerHTML = "";
+        list.forEach(function (item, idx) {
+          var div = document.createElement("div");
+          div.className = "repeater-item";
+          div.innerHTML =
+            '<div class="repeater-head">' +
+            '<span class="repeater-title">Kanal #' + (idx + 1) + "</span>" +
+            '<button type="button" class="btn btn-danger btn-sm btn-del-link">Hapus</button>' +
+            "</div>" +
+            '<div class="form-row-2">' +
+            '<input type="text" class="form-control cl-label" placeholder="Nama Kanal (mis: Instagram Komunitas)" value="' + App.escapeHtml(item.label) + '" />' +
+            '<input type="text" class="form-control cl-nilai" placeholder="Teks Tampil (mis: @username)" value="' + App.escapeHtml(item.nilai) + '" />' +
+            "</div>" +
+            '<div class="form-row-2">' +
+            '<input type="text" class="form-control cl-url" placeholder="URL Tautan (https://...)" value="' + App.escapeHtml(item.url) + '" />' +
+            '<select class="form-control cl-ikon">' +
+            '<option value="instagram"' + (item.ikon === "instagram" ? " selected" : "") + ">Logo Instagram</option>" +
+            '<option value="github"' + (item.ikon === "github" ? " selected" : "") + ">Logo GitHub</option>" +
+            '<option value="globe"' + (item.ikon === "globe" ? " selected" : "") + ">Logo Website/Globe</option>" +
+            '<option value="link"' + (item.ikon === "link" ? " selected" : "") + ">Logo Tautan Umum</option>" +
+            "</select>" +
+            "</div>";
+          div.querySelector(".btn-del-link").addEventListener("click", function () {
+            div.remove();
+          });
+          container.appendChild(div);
+        });
+      }
+
+      document.getElementById("btn-add-contact-link").addEventListener("click", function () {
+        var existing = collectContactLinksFromDom();
+        existing.push({ label: "", nilai: "", url: "https://", ikon: "instagram" });
+        renderContactLinksEditor(existing);
+      });
+
+      function collectContactLinksFromDom() {
+        var rows = document.querySelectorAll("#admin-contact-links-list .repeater-item");
+        var res = [];
+        rows.forEach(function (r) {
+          var label = r.querySelector(".cl-label").value.trim();
+          var nilai = r.querySelector(".cl-nilai").value.trim();
+          var url = r.querySelector(".cl-url").value.trim();
+          var ikon = r.querySelector(".cl-ikon").value;
+          if (label || nilai) {
+            res.push({ label: label || "Kanal Digital", nilai: nilai || url, url: url || "#", ikon: ikon });
+          }
+        });
+        return res;
+      }
+
+      // Save Tab 2 (Contact)
+      document.getElementById("form-edit-kontak").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var privacyBox = document.getElementById("privacy-warning-box");
+        privacyBox.classList.remove("alert-show");
+
+        var igHandle = document.getElementById("edit-ig-handle").value.trim();
+        var igUrl = document.getElementById("edit-ig-url").value.trim();
+        var links = collectContactLinksFromDom();
+
+        var warnings = [];
+        [igHandle, igUrl].forEach(function (v) {
+          var w = App.checkSensitiveInfo(v);
+          if (w && warnings.indexOf(w) === -1) warnings.push(w);
+        });
+        links.forEach(function (l) {
+          [l.label, l.nilai, l.url].forEach(function (v) {
+            var w = App.checkSensitiveInfo(v);
+            if (w && warnings.indexOf(w) === -1) warnings.push(w);
+          });
+        });
+
+        if (warnings.length) {
+          privacyBox.textContent = warnings.join(" ");
+          privacyBox.classList.add("alert-show");
+        }
+
+        currentState.contact.sambutan = document.getElementById("edit-contact-sambutan").value.trim();
+        currentState.contact.instagramHandle = igHandle;
+        currentState.contact.instagramUrl = igUrl;
+        currentState.contact.komunitasJudul = document.getElementById("edit-komunitas-judul").value.trim();
+        currentState.contact.komunitasDeskripsi = document.getElementById("edit-komunitas-desc").value.trim();
+        currentState.contact.links = links;
+
+        currentState = App.saveState(currentState);
+        App.applyProfileToDom();
+        refreshConfigPreview();
+        showGlobalAlert("success", "Informasi kontak dan jejaring Instagram berhasil diperbarui!");
+      });
+
+      // Tab 3: Change Password
+      document.getElementById("form-change-password").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var pwAlert = document.getElementById("password-alert");
+        var oldPw = document.getElementById("pw-old").value;
+        var newPw = document.getElementById("pw-new").value;
+        var confirmPw = document.getElementById("pw-confirm").value;
+
+        if (App.sha256(oldPw) !== currentState.admin.passwordHash) {
+          pwAlert.className = "alert alert-show alert-error";
+          pwAlert.textContent = "Password lama tidak cocok.";
+          return;
+        }
+        if (newPw.length < 6) {
+          pwAlert.className = "alert alert-show alert-error";
+          pwAlert.textContent = "Password baru minimal 6 karakter.";
+          return;
+        }
+        if (newPw !== confirmPw) {
+          pwAlert.className = "alert alert-show alert-error";
+          pwAlert.textContent = "Konfirmasi password baru tidak sama.";
+          return;
+        }
+
+        currentState.admin.passwordHash = App.sha256(newPw);
+        currentState = App.saveState(currentState);
+        document.getElementById("form-change-password").reset();
+        refreshConfigPreview();
+        pwAlert.className = "alert alert-show alert-success";
+        pwAlert.textContent = "Password admin berhasil diganti! Gunakan tab 'Simpan Permanen (Publish)' untuk mengunduh config.js jika ingin diterapkan ke situs publik.";
+      });
+
+      // Tab 4: Export / Publish Config
+      function refreshConfigPreview() {
+        var preview = document.getElementById("config-export-preview");
+        if (preview) {
+          preview.value = App.generateConfigJsContent(currentState);
+        }
+      }
+
+      document.getElementById("btn-download-config").addEventListener("click", function () {
+        var content = App.generateConfigJsContent(currentState);
+        var blob = new Blob([content], { type: "application/javascript;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "config.js";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showGlobalAlert("success", "File config.js berhasil diunduh. Ganti file js/config.js dengan file ini sebelum upload ke Vercel.");
+      });
+
+      document.getElementById("btn-copy-config").addEventListener("click", function () {
+        var textarea = document.getElementById("config-export-preview");
+        textarea.select();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(textarea.value).then(function () {
+            showGlobalAlert("success", "Kode config.js disalin ke clipboard. Tempelkan ke file js/config.js.");
+          });
+        } else {
+          document.execCommand("copy");
+          showGlobalAlert("success", "Kode config.js disalin ke clipboard.");
+        }
+      });
+
+      document.getElementById("btn-reset-local").addEventListener("click", function () {
+        if (!confirm("Kembalikan data browser lokal ini agar mengikuti isi file js/config.js / HTML saat ini?")) {
+          return;
+        }
+        currentState = App.resetLocalState();
+        App.applyProfileToDom();
+        populateAllForms();
+        showGlobalAlert("info", "Penyimpanan lokal browser telah disinkronkan ulang dengan file publish.");
+      });
+
+      // Tab 5: Incoming Messages
+      function renderMessages() {
+        var container = document.getElementById("admin-messages-list");
+        var list = App.getMessages();
+        if (!list.length) {
+          container.innerHTML = '<p style="color: var(--text-muted);">Belum ada pesan masuk pada penyimpanan lokal browser ini.</p>';
+          return;
+        }
+        container.innerHTML = list
+          .map(function (m) {
+            return (
+              '<div class="message-card">' +
+              '<div class="message-meta">' +
+              "<strong>" + App.escapeHtml(m.nama) + " &mdash; " + App.escapeHtml(m.subjek) + "</strong>" +
+              "<span>" + App.escapeHtml(m.waktu) + "</span>" +
+              "</div>" +
+              "<p>" + App.escapeHtml(m.pesan) + "</p>" +
+              "</div>"
+            );
+          })
+          .join("");
+      }
+
+      document.getElementById("btn-clear-messages").addEventListener("click", function () {
+        App.clearMessages();
+        renderMessages();
+        showGlobalAlert("info", "Daftar pesan masuk lokal telah dibersihkan.");
+      });
+
+      document.addEventListener("DOMContentLoaded", toggleView);
+    })();
+  </script>
+</body>
+</html>

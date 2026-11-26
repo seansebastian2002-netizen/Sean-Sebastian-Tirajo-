@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beranda | Web Profil &amp; Portofolio</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --secondary: #0d9488;
+      --secondary-soft: #f0fdfa;
+      --accent: #f59e0b;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.07), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-size: 0.94rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-link:hover {
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    .nav-link.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-admin-btn {
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-admin-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .nav-admin-btn.is-logged-in {
+      border-color: #99f6e4;
+      background: var(--secondary-soft);
+      color: var(--secondary);
+    }
+
+    .status-dot-online {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 56px 0 64px;
+      background: radial-gradient(circle at top right, #eff6ff 0%, #f8fafc 55%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 44px;
+      align-items: center;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--secondary-soft);
+      color: var(--secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid #ccfbf1;
+      margin-bottom: 18px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--secondary);
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 2.85rem);
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .hero-title span {
+      color: var(--primary);
+    }
+
+    .hero-role {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 14px;
+    }
+
+    .hero-desc {
+      font-size: 1.03rem;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+      max-width: 560px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.22);
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Mini profile strip inside hero */
+    .hero-mini-profile {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px 10px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-mini-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--primary-soft);
+    }
+
+    .hero-mini-text small {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .hero-mini-text strong {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .hero-visual {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .hero-visual img {
+      width: 100%;
+      border-radius: 14px;
+      object-fit: cover;
+    }
+
+    .hero-visual-caption {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    /* Sections */
+    .section { padding: 60px 0; }
+    .section-alt { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .section-eyebrow {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .section-title {
+      font-size: clamp(1.45rem, 2.5vw, 1.9rem);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      max-width: 580px;
+      margin-top: 6px;
+    }
+
+    .cards-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tag-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--primary-soft);
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .feature-card p {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+    }
+
+    /* Profile Preview Card */
+    .profile-banner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .profile-banner-photo {
+      width: 112px;
+      height: 112px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 3px solid var(--primary-soft);
+    }
+
+    /* Jejaring Komunitas Instagram Card */
+    .community-card {
+      background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 45%, #eff6ff 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .community-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      max-width: 640px;
+    }
+
+    .instagram-badge-icon {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(236, 72, 153, 0.25);
+    }
+
+    .btn-instagram {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(236, 72, 153, 0.24);
+    }
+
+    .btn-instagram:hover {
+      filter: brightness(1.05);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a:hover { color: var(--primary); }
+
+    .footer-ig {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #db2777;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .cards-grid-3 { grid-template-columns: 1fr; }
+      .profile-banner { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+    }
+
+    @media (max-width: 720px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 16px 4%;
+        align-items: stretch;
+      }
+      .nav-menu.open { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">WP</span>
+        <span data-bind="nama" data-preserve-html="true">Raka Pratama</span>
+      </a>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Buka menu navigasi" aria-expanded="false">
+        Menu &#9776;
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="index.html" class="nav-link active">Beranda</a></li>
+        <li><a href="profil.html" class="nav-link">Profil</a></li>
+        <li><a href="kontak.html" class="nav-link">Kontak</a></li>
+        <li><a href="admin.html" id="nav-admin-link" class="nav-admin-btn">Login Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="badge-status">
+            <span class="badge-dot"></span>
+            <span data-bind="ketersediaan" data-preserve-html="true">Terbuka untuk Diskusi &amp; Kolaborasi Proyek</span>
+          </div>
+          <h1 class="hero-title">
+            Halo, Saya <span data-bind="nama" data-preserve-html="true">Raka Pratama</span>
+          </h1>
+          <p class="hero-role" data-bind="peran" data-preserve-html="true">Pelajar &amp; Pengembang Web</p>
+          <p class="hero-desc" data-bind="sambutanHero" data-preserve-html="true">
+            Selamat datang di ruang profil digital saya. Melalui situs ini, Anda dapat mengenal latar belakang, keahlian utama, serta karya yang sedang saya kembangkan.
+          </p>
+
+          <div class="hero-actions">
+            <a href="profil.html" class="btn btn-primary">Lihat Profil Lengkap</a>
+            <a href="kontak.html" class="btn btn-outline">Hubungi &amp; Jejaring</a>
+          </div>
+
+          <div class="hero-mini-profile">
+            <img src="assets/foto-profil.jpg" alt="Foto Profil Raka Pratama" class="hero-mini-avatar" data-bind-img="foto" data-preserve-html="true" />
+            <div class="hero-mini-text">
+              <strong data-bind="nama" data-preserve-html="true">Raka Pratama</strong>
+              <small data-bind="tagline" data-preserve-html="true">Membangun antarmuka web yang rapi, cepat, dan nyaman digunakan di berbagai perangkat.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img src="assets/ilustrasi-utama.jpg" alt="Ilustrasi Ruang Kerja Pengembangan Web" data-bind-img="ilustrasi" data-preserve-html="true" />
+          <div class="hero-visual-caption">
+            <span>Ilustrasi Ruang Kerja Digital</span>
+            <span>HTML &amp; JavaScript Light Theme</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Highlight / Fokus Aktivitas -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="section-eyebrow">Fokus &amp; Karya</span>
+            <h2 class="section-title">Bidang yang Sedang Dikembangkan</h2>
+            <p class="section-sub">Ringkasan inisiatif dan kompetensi utama dalam pengembangan aplikasi web statis.</p>
+          </div>
+          <a href="profil.html" class="btn btn-outline">Selengkapnya di Profil &rarr;</a>
+        </div>
+
+        <div id="highlights-container" class="cards-grid-3">
+          <article class="feature-card">
+            <span class="tag-pill">HTML &amp; JavaScript</span>
+            <h3>Pengembangan Web Profil Statis</h3>
+            <p>Merancang portal profil pribadi yang berjalan penuh di browser lokal maupun platform cloud seperti Vercel tanpa dependensi server.</p>
+          </article>
+          <article class="feature-card">
+            <span class="tag-pill">UI Design</span>
+            <h3>Eksplorasi Antarmuka Minimalis</h3>
+            <p>Mengutamakan keterbacaan teks, hierarki visual yang jelas, serta palet warna terang yang nyaman dipandang.</p>
+          </article>
+          <article class="feature-card">
+            <span class="tag-pill">Komunitas</span>
+            <h3>Kolaborasi Komunitas Kreatif</h3>
+            <p>Aktif berdiskusi dan berbagi inspirasi seputar pemrograman web dasar bersama rekan pelajar melalui jejaring Instagram.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ringkasan Profil + Foto -->
+    <section class="section">
+      <div class="container">
+        <div class="profile-banner">
+          <img src="assets/foto-profil.jpg" alt="Foto Profil Raka Pratama" class="profile-banner-photo" data-bind-img="foto" data-preserve-html="true" />
+          <div>
+            <span class="section-eyebrow">Sekilas Profil</span>
+            <h2 class="section-title" data-bind="nama" data-preserve-html="true">Raka Pratama</h2>
+            <p class="section-sub" data-bind="tagline" data-preserve-html="true">
+              Membangun antarmuka web yang rapi, cepat, dan nyaman digunakan di berbagai perangkat.
+            </p>
+          </div>
+          <a href="profil.html" class="btn btn-primary">Buka Halaman Profil</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Jejaring Komunitas dengan Logo Instagram -->
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+        <div class="community-card">
+          <div class="community-left">
+            <div class="instagram-badge-icon" aria-label="Logo Instagram">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </div>
+            <div>
+              <h2 class="section-title" style="font-size: 1.35rem;" data-bind="komunitasJudul" data-preserve-html="true">Jejaring Komunitas</h2>
+              <p style="color: var(--text-muted); margin-top: 4px;" data-bind="komunitasDeskripsi" data-preserve-html="true">
+                Ikuti pembaruan karya, catatan belajar, dan aktivitas komunitas melalui akun Instagram resmi berikut.
+              </p>
+            </div>
+          </div>
+          <a href="https://instagram.com/rakapratama.dev" target="_blank" rel="noopener noreferrer" class="btn btn-instagram" data-bind-instagram data-preserve-html="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+            <span data-bind="instagramHandle" data-preserve-html="true">@rakapratama.dev</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 <strong data-bind="nama" data-preserve-html="true">Raka Pratama</strong> &mdash; Web Profil HTML &amp; JavaScript.</p>
+      <div class="footer-links">
+        <a href="index.html">Beranda</a>
+        <a href="profil.html">Profil</a>
+        <a href="kontak.html">Kontak</a>
+        <a href="https://instagram.com/rakapratama.dev" target="_blank" rel="noopener noreferrer" class="footer-ig" data-bind-instagram data-preserve-html="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          Instagram
+        </a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

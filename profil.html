@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil | Web Profil &amp; Portofolio</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --secondary: #0d9488;
+      --secondary-soft: #f0fdfa;
+      --accent: #f59e0b;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.07), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container { width: min(1120px, 92%); margin: 0 auto; }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-size: 0.94rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-link:hover { background: var(--surface-soft); color: var(--text); }
+    .nav-link.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+
+    .nav-admin-btn {
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-admin-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+    .nav-admin-btn.is-logged-in { border-color: #99f6e4; background: var(--secondary-soft); color: var(--secondary); }
+    .status-dot-online { width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; }
+
+    .nav-toggle {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+
+    /* Page Header */
+    .page-header {
+      padding: 48px 0 36px;
+      background: radial-gradient(circle at top left, #eff6ff 0%, #f8fafc 60%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .profile-photo-wrap {
+      position: relative;
+    }
+
+    .profile-photo {
+      width: 220px;
+      height: 220px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 4px solid var(--primary-soft);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .profile-name {
+      font-size: clamp(1.75rem, 3vw, 2.35rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .profile-role {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 12px;
+    }
+
+    .profile-tagline {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      max-width: 640px;
+    }
+
+    .profile-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .pill-ig {
+      background: #fdf2f8;
+      border-color: #fbcfe8;
+      color: #be185d;
+    }
+
+    .pill-status {
+      background: var(--secondary-soft);
+      border-color: #99f6e4;
+      color: var(--secondary);
+    }
+
+    /* Content Sections */
+    .section { padding: 52px 0; }
+    .section-white { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .section-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .bio-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bio-box p + p { margin-top: 14px; }
+    .bio-box p { color: var(--text-muted); font-size: 1rem; }
+
+    .illustration-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .illustration-box img {
+      border-radius: 12px;
+      width: 100%;
+    }
+
+    .illustration-box figcaption {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* Skills */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .skill-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .skill-cat {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .skill-level {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    .skill-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Timeline */
+    .timeline {
+      display: grid;
+      gap: 18px;
+      position: relative;
+      padding-left: 24px;
+      border-left: 2px solid var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -32px;
+      top: 18px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid var(--primary-soft);
+    }
+
+    .timeline-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .timeline-period {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .timeline-content h3 { font-size: 1.08rem; margin-bottom: 4px; }
+    .timeline-org { font-size: 0.9rem; font-weight: 600; color: var(--secondary); margin-bottom: 8px; }
+    .timeline-content p:last-child { color: var(--text-muted); font-size: 0.94rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.94rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    /* Footer */
+    .footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--primary); }
+    .footer-ig { display: inline-flex; align-items: center; gap: 6px; color: #db2777; font-weight: 600; }
+
+    @media (max-width: 850px) {
+      .profile-hero-card { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+      .profile-meta-row { justify-content: center; }
+      .about-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 16px 4%;
+        align-items: stretch;
+      }
+      .nav-menu.open { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">WP</span>
+        <span data-bind="nama" data-preserve-html="true">Raka Pratama</span>
+      </a>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Buka menu navigasi" aria-expanded="false">
+        Menu &#9776;
+      </button>
+      <ul id="nav-menu" class="nav-menu">
+        <li><a href="index.html" class="nav-link">Beranda</a></li>
+        <li><a href="profil.html" class="nav-link active">Profil</a></li>
+        <li><a href="kontak.html" class="nav-link">Kontak</a></li>
+        <li><a href="admin.html" id="nav-admin-link" class="nav-admin-btn">Login Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- Header Profil -->
+    <section class="page-header">
+      <div class="container">
+        <div class="profile-hero-card">
+          <div class="profile-photo-wrap">
+            <img src="assets/foto-profil.jpg" alt="Foto Profil Raka Pratama" class="profile-photo" data-bind-img="foto" data-preserve-html="true" />
+          </div>
+          <div>
+            <span class="eyebrow">Profil Lengkap</span>
+            <h1 class="profile-name" data-bind="nama" data-preserve-html="true">Raka Pratama</h1>
+            <p class="profile-role" data-bind="peran" data-preserve-html="true">Pelajar &amp; Pengembang Web</p>
+            <p class="profile-tagline" data-bind="tagline" data-preserve-html="true">
+              Membangun antarmuka web yang rapi, cepat, dan nyaman digunakan di berbagai perangkat.
+            </p>
+            <div class="profile-meta-row">
+              <span class="pill pill-status" data-bind="ketersediaan" data-preserve-html="true">Terbuka untuk Diskusi &amp; Kolaborasi Proyek</span>
+              <a href="https://instagram.com/rakapratama.dev" target="_blank" rel="noopener noreferrer" class="pill pill-ig" data-bind-instagram data-preserve-html="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+                <span data-bind="instagramHandle" data-preserve-html="true">@rakapratama.dev</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tentang Saya + Ilustrasi -->
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow">Tentang Saya</span>
+        <h2 class="section-title">Mengenal Lebih Dekat</h2>
+        <div class="about-grid">
+          <div class="bio-box" data-bind="bio" data-preserve-html="true">
+            <p>
+              Saya adalah seorang pelajar di bidang teknologi informasi yang memiliki ketertarikan besar pada pengembangan web modern, perancangan antarmuka bertema cerah (light theme), serta pengelolaan konten digital yang terstruktur.
+            </p>
+            <p>
+              Saya senang mengeksplorasi teknologi dasar seperti HTML dan JavaScript murni untuk menciptakan aplikasi web yang ringan, responsif, dan siap dipublikasikan dengan mudah.
+            </p>
+          </div>
+          <figure class="illustration-box">
+            <img src="assets/ilustrasi-utama.jpg" alt="Ilustrasi Aktivitas Pengembangan Web" data-bind-img="ilustrasi" data-preserve-html="true" />
+            <figcaption>Ilustrasi aktivitas perancangan antarmuka &amp; kode web</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Keahlian -->
+    <section class="section section-white">
+      <div class="container">
+        <span class="eyebrow">Kompetensi</span>
+        <h2 class="section-title">Keahlian &amp; Minat Utama</h2>
+        <div id="skills-container" class="skills-grid">
+          <div class="skill-card">
+            <div class="skill-top">
+              <span class="skill-cat">Frontend</span>
+              <span class="skill-level">Mahir</span>
+            </div>
+            <h3 class="skill-name">HTML5 &amp; Struktur Semantik</h3>
+          </div>
+          <div class="skill-card">
+            <div class="skill-top">
+              <span class="skill-cat">Logika Web</span>
+              <span class="skill-level">Menengah - Mahir</span>
+            </div>
+            <h3 class="skill-name">JavaScript Lokal &amp; Interaktif</h3>
+          </div>
+          <div class="skill-card">
+            <div class="skill-top">
+              <span class="skill-cat">UI/UX</span>
+              <span class="skill-level">Mahir</span>
+            </div>
+            <h3 class="skill-name">Desain Antarmuka Light Theme</h3>
+          </div>
+          <div class="skill-card">
+            <div class="skill-top">
+              <span class="skill-cat">Deployment</span>
+              <span class="skill-level">Menengah</span>
+            </div>
+            <h3 class="skill-name">Publikasi Web Statis (Vercel)</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Perjalanan Belajar -->
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow">Latar Belakang</span>
+        <h2 class="section-title">Perjalanan Pembelajaran</h2>
+        <div id="history-container" class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">2024 - Sekarang</span>
+              <h3>Rekayasa Perangkat Lunak &amp; Pengembangan Web</h3>
+              <p class="timeline-org">Pembelajaran Mandiri &amp; Proyek Sekolah</p>
+              <p>Mempelajari dasar arsitektur web statis, manipulasi DOM dengan JavaScript, serta praktik baik publikasi aplikasi web.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">2023 - 2024</span>
+              <h3>Dasar Desain Antarmuka Digital</h3>
+              <p class="timeline-org">Kegiatan Ekstrakurikuler Teknologi</p>
+              <p>Melatih kepekaan tata letak halaman web, pemilihan warna light theme, dan penyusunan aset ilustrasi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="kontak.html" class="btn btn-primary">Terhubung di Halaman Kontak &rarr;</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 <strong data-bind="nama" data-preserve-html="true">Raka Pratama</strong> &mdash; Web Profil HTML &amp; JavaScript.</p>
+      <div class="footer-links">
+        <a href="index.html">Beranda</a>
+        <a href="profil.html">Profil</a>
+        <a href="kontak.html">Kontak</a>
+        <a href="https://instagram.com/rakapratama.dev" target="_blank" rel="noopener noreferrer" class="footer-ig" data-bind-instagram data-preserve-html="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+          Instagram
+        </a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
